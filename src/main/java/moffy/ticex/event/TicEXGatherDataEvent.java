@@ -5,6 +5,7 @@ import moffy.ticex.TicEX;
 import moffy.ticex.client.modules.ticex.TicEXSpriteSourceProvider;
 import moffy.ticex.datagen.blockstate.TicEXBlockstateProvider;
 import moffy.ticex.datagen.fluid.FluidTextureProvider;
+import moffy.ticex.datagen.fluid.TicEXFluidToolTipProvider;
 import moffy.ticex.datagen.general.LootProvider;
 import moffy.ticex.datagen.general.TicEXDamageTypeProvider;
 import moffy.ticex.datagen.general.recipes.TicEXRecipeProvider;
@@ -67,6 +68,7 @@ public class TicEXGatherDataEvent {
         generator.addProvider(client, new FluidBlockstateModelProvider(packOutput, TicEX.MODID));
         generator.addProvider(client, new TicEXBlockstateProvider(packOutput, existingFileHelper));
         generator.addProvider(client, new TicEXSpriteSourceProvider(packOutput, existingFileHelper));
+        generator.addProvider(client, new TicEXFluidToolTipProvider(packOutput));
 
         //tinkers slot
         generator.addProvider(server, new TicEXStationSlotLayoutProvider(packOutput));

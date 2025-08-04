@@ -1,4 +1,4 @@
-package moffy.ticex.block.entity;
+package moffy.ticex.block.rf_furnance.entity;
 
 import net.minecraftforge.energy.EnergyStorage;
 

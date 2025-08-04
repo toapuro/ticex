@@ -1,0 +1,9 @@
+{
+  "values": [
+    "ticex:fluid_transmuter",
+    {
+      "id": "#tconstruct:alloyer_tanks",
+      "required": false
+    }
+  ]
+}

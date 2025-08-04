@@ -1,7 +1,6 @@
-package moffy.ticex.block;
+package moffy.ticex.block.rf_furnance;
 
-import javax.annotation.Nullable;
-import moffy.ticex.block.entity.RFFurnaceBlockEntity;
+import moffy.ticex.block.rf_furnance.entity.RFFurnaceBlockEntity;
 import moffy.ticex.modules.general.TicEXRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -19,6 +18,8 @@ import net.minecraftforge.fluids.FluidType;
 import org.jetbrains.annotations.NotNull;
 import slimeknights.tconstruct.smeltery.block.component.OrientableSmelteryBlock;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock;
+
+import javax.annotation.Nullable;
 
 public class RFFurnaceBlock extends SearedTankBlock {
 

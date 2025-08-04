@@ -2,9 +2,13 @@ package moffy.ticex.modules.general;
 
 import moffy.addonapi.AddonModule;
 import moffy.ticex.TicEX;
-import moffy.ticex.block.RFFurnaceBlock;
-import moffy.ticex.block.entity.RFFurnaceBlockEntity;
+import moffy.ticex.block.rf_furnance.RFFurnaceBlock;
+import moffy.ticex.block.rf_furnance.entity.RFFurnaceBlockEntity;
+import moffy.ticex.block.transmuter.FluidTransmuterBlock;
+import moffy.ticex.block.transmuter.container.FluidTransmuterContainerMenu;
+import moffy.ticex.block.transmuter.entity.FluidTransmuterBlockEntity;
 import moffy.ticex.caps.TiCEXToolCapabilityProvider;
+import moffy.ticex.client.modules.ticex.screen.FluidTransmuterScreen;
 import moffy.ticex.event.TicEXEvent;
 import moffy.ticex.item.cores.ItemFlickeringCore;
 import moffy.ticex.item.cores.ItemReconstCore;
@@ -17,6 +21,7 @@ import moffy.ticex.lib.utils.TicEXFluidUtils;
 import moffy.ticex.modifier.ModifierDeflection;
 import moffy.ticex.modifier.ModifierEmbossment;
 import moffy.ticex.modifier.ModifierSassy;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -34,6 +39,7 @@ import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import slimeknights.mantle.recipe.helper.LoadableRecipeSerializer;
@@ -70,6 +76,11 @@ public class TicEXModule extends AddonModule {
         TicEXRegistry.VALIDATABLE_INCREMENTAL_RECIPE_SERIALIZER = TicEXRegistry.RECIPE_SERIALIZERS.register(
             "validatable_incremental_modifier",
             () -> LoadableRecipeSerializer.of(ValidatableIncrementalModifierRecipe.LOADER)
+        );
+
+        TicEXRegistry.FLUID_TRANSMUTER_MENU_TYPE = TicEXRegistry.MENUS.register(
+                "fluid_transmuter",
+                FluidTransmuterContainerMenu::new
         );
 
         TicEXRegistry.EMBOSSMENT_HOOK = ModifierHooks.LOADER.register(
@@ -115,6 +126,10 @@ public class TicEXModule extends AddonModule {
         TicEXRegistry.CREATIVE_SCORCHED_RF_FURNACE = TicEXRegistry.BLOCKS.register("creative_scorched_rf_furnace", () ->
             new RFFurnaceBlock(TicEXRegistry.SCORCHED, true)
         );
+        TicEXRegistry.FLUID_TRANSMUTER = TicEXRegistry.BLOCKS.register("fluid_transmuter", () ->
+                new FluidTransmuterBlock(TicEXRegistry.SCORCHED.noOcclusion())
+        );
+
         TicEXRegistry.ITEMS.register("etheric_block", () ->
             new BlockItem(TicEXRegistry.ETHERIC_BLOCK.get(), new Item.Properties())
         );
@@ -130,6 +145,9 @@ public class TicEXModule extends AddonModule {
         TicEXRegistry.ITEMS.register("creative_scorched_rf_furnace", () ->
             new BlockItem(TicEXRegistry.CREATIVE_SCORCHED_RF_FURNACE.get(), new Item.Properties())
         );
+        TicEXRegistry.ITEMS.register("fluid_transmuter", () ->
+                new BlockItem(TicEXRegistry.FLUID_TRANSMUTER.get(), new Item.Properties())
+        );
 
         TicEXRegistry.RF_FURNACE_ENTITY = TicEXRegistry.BLOCK_ENTITIES.register("rf_furnace_entity", () ->
             BlockEntityType.Builder.of(
@@ -140,6 +158,14 @@ public class TicEXModule extends AddonModule {
                 TicEXRegistry.CREATIVE_SEARED_RF_FURNACE.get(),
                 TicEXRegistry.CREATIVE_SCORCHED_RF_FURNACE.get()
             ).build(null)
+        );
+
+        TicEXRegistry.FLUID_TRANSMUTER_ENTITY = TicEXRegistry.BLOCK_ENTITIES.register("fluid_transmuter", () ->
+                BlockEntityType.Builder.of(
+                        (BlockPos pPos, BlockState pState) ->
+                                new FluidTransmuterBlockEntity(TicEXRegistry.FLUID_TRANSMUTER_ENTITY.get(), pPos, pState),
+                        TicEXRegistry.FLUID_TRANSMUTER.get()
+                ).build(null)
         );
 
         TicEXRegistry.MOLTEN_ETHERIC = TicEXRegistry.FLUIDS.register("molten_etheric")
@@ -207,16 +233,18 @@ public class TicEXModule extends AddonModule {
         }
         DistExecutor.unsafeRunWhenOn(
             Dist.CLIENT,
-            () ->
-                () -> {
-                    initClient();
-                }
+                () -> this::initClient
         );
     }
 
     @Override
     public void setup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> CatalystMaterialStatsType.RegisterStats());
+        event.enqueueWork(CatalystMaterialStatsType::RegisterStats);
+    }
+
+    @Override
+    public void clientSetup(FMLClientSetupEvent event) {
+        MenuScreens.register(TicEXRegistry.FLUID_TRANSMUTER_MENU_TYPE.get(), FluidTransmuterScreen::new);
     }
 
     @OnlyIn(Dist.CLIENT)

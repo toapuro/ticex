@@ -20,6 +20,11 @@ public class TicEXTags {
         public static final TagKey<Block> NEUTRON = common("storage_blocks/neutron");
         public static final TagKey<Block> CRYSTAL_MATRIX = common("storage_blocks/crystal_matrix");
         public static final TagKey<Block> ETHERIC = common("storage_blocks/etheric");
+        public static final TagKey<Block> TRANSMUTER_TANKS = local("transmuter_tanks");
+
+        private static TagKey<Block> local(String name) {
+            return TagKey.create(Registries.BLOCK, getResource(name));
+        }
 
         private static TagKey<Block> common(String name) {
             return TagKey.create(Registries.BLOCK, commonResource(name));

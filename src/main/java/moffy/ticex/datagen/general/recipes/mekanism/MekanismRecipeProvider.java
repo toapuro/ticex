@@ -6,8 +6,8 @@ import mekanism.common.registries.MekanismGases;
 import mekanism.common.registries.MekanismItems;
 import moffy.ticex.TicEX;
 import moffy.ticex.datagen.general.recipes.ITicEXRecipeHelper;
-import moffy.ticex.datagen.general.recipes.ticex.IEmbossmentToolRecipeHelper;
 import moffy.ticex.datagen.general.recipes.ticex.embossment.EmbossmentBuildingRecipeBuilder;
+import moffy.ticex.datagen.general.recipes.ticex.embossment.IEmbossmentToolRecipeHelper;
 import moffy.ticex.datagen.general.recipes.ticex.embossment.SingleEmbossmentModifierRecipeBuilder;
 import moffy.ticex.lib.TicEXTags;
 import moffy.ticex.modules.general.TicEXRegistry;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.common.crafting.DifferenceIngredient;
 import slimeknights.tconstruct.common.TinkerTags;
-import slimeknights.tconstruct.library.recipe.casting.material.MaterialCastingRecipe;
 import slimeknights.tconstruct.library.recipe.modifiers.adding.ModifierRecipeBuilder;
 import slimeknights.tconstruct.library.tools.SlotType;
 

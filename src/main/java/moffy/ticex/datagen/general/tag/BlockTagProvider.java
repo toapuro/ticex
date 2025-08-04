@@ -12,8 +12,13 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.data.BlockTagsProvider;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.shared.TinkerCommons;
+import slimeknights.tconstruct.smeltery.TinkerSmeltery;
+
+import static moffy.ticex.lib.TicEXTags.Blocks.*;
 
 public class BlockTagProvider extends BlockTagsProvider {
 
@@ -26,17 +31,21 @@ public class BlockTagProvider extends BlockTagsProvider {
     }
 
     @Override
-    protected void addTags(Provider pProvider) {
+    protected void addTags(@NotNull Provider pProvider) {
         this.addCommon();
         this.addSmeltery();
     }
 
     private void addCommon() {
-        addMetalTags(TicEXTags.Blocks.INFINITY, new ResourceLocation("avaritia", "infinity"), true);
-        addMetalTags(TicEXTags.Blocks.NEUTRON, new ResourceLocation("avaritia", "neutron"), true);
-        addMetalTags(TicEXTags.Blocks.CRYSTAL_MATRIX, new ResourceLocation("avaritia", "crystal_matrix"), true);
+        tag(TRANSMUTER_TANKS)
+                .add(TicEXRegistry.FLUID_TRANSMUTER.get())
+                .addOptionalTag(TinkerTags.Blocks.ALLOYER_TANKS);
 
-        addMetalTags(TicEXTags.Blocks.ETHERIC, new ResourceLocation(TicEX.MODID, "etheric_block"), true);
+        addMetalTags(INFINITY, new ResourceLocation("avaritia", "infinity"), true);
+        addMetalTags(NEUTRON, new ResourceLocation("avaritia", "neutron"), true);
+        addMetalTags(CRYSTAL_MATRIX, new ResourceLocation("avaritia", "crystal_matrix"), true);
+
+        addMetalTags(ETHERIC, new ResourceLocation(TicEX.MODID, "etheric_block"), true);
 
         addPickaxeBlock(BlockTags.NEEDS_IRON_TOOL, new ResourceLocation(TicEX.MODID, "etheric_block"));
 

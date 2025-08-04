@@ -1,6 +1,5 @@
-package moffy.ticex.block.entity;
+package moffy.ticex.block.rf_furnance.entity;
 
-import javax.annotation.Nonnull;
 import moffy.ticex.TicEXConfig;
 import moffy.ticex.modules.general.TicEXRegistry;
 import net.minecraft.core.BlockPos;
@@ -25,6 +24,8 @@ import slimeknights.tconstruct.library.fluid.FluidTankAnimated;
 import slimeknights.tconstruct.library.utils.NBTTags;
 import slimeknights.tconstruct.smeltery.block.entity.ITankBlockEntity;
 import slimeknights.tconstruct.smeltery.block.entity.component.SmelteryComponentBlockEntity;
+
+import javax.annotation.Nonnull;
 
 public class RFFurnaceBlockEntity extends SmelteryComponentBlockEntity implements ITankBlockEntity {
 

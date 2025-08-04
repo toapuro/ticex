@@ -1,25 +1,24 @@
 package moffy.ticex.modules.general;
 
 import moffy.ticex.TicEX;
-import moffy.ticex.block.entity.RFFurnaceBlockEntity;
+import moffy.ticex.block.rf_furnance.entity.RFFurnaceBlockEntity;
+import moffy.ticex.block.transmuter.container.FluidTransmuterContainerMenu;
+import moffy.ticex.block.transmuter.entity.FluidTransmuterBlockEntity;
 import moffy.ticex.lib.hook.EmbossmentModifierHook;
 import moffy.ticex.lib.hook.ProvidePropertyModifierHook;
 import moffy.ticex.lib.recipe.*;
 import moffy.ticex.lib.registry.TicEXItemDeferredRegisterExtension;
+import moffy.ticex.lib.registry.TicEXRecipeTypeDeferredRegister;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArrowItem;
-import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,6 +32,7 @@ import net.minecraftforge.registries.RegistryObject;
 import slimeknights.mantle.fluid.UnplaceableFluid;
 import slimeknights.mantle.recipe.helper.TypeAwareRecipeSerializer;
 import slimeknights.mantle.registration.deferred.FluidDeferredRegister;
+import slimeknights.mantle.registration.deferred.MenuTypeDeferredRegister;
 import slimeknights.mantle.registration.object.EnumObject;
 import slimeknights.mantle.registration.object.FlowingFluidObject;
 import slimeknights.mantle.registration.object.FluidObject;
@@ -143,10 +143,13 @@ public class TicEXRegistry {
         Registries.RECIPE_SERIALIZER,
         TicEX.MODID
     );
-    public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(
-        Registries.RECIPE_TYPE,
+    public static final TicEXRecipeTypeDeferredRegister RECIPE_TYPES = TicEXRecipeTypeDeferredRegister.create(
+            Registries.RECIPE_TYPE
+    );
+    public static final MenuTypeDeferredRegister MENUS = new MenuTypeDeferredRegister(
         TicEX.MODID
     );
+
 
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_ITEMS = null;
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_TOOLS = null;
@@ -156,6 +159,9 @@ public class TicEXRegistry {
     public static RegistryObject<RecipeSerializer<EmbossmentModifierRecipe>> MODIFIER_EMBOSSMENT_RECIPE_SERIALIZER = null;
     public static RegistryObject<RecipeSerializer<SingleEmbossmentModifierRecipe>> SINGLE_MODIFIER_EMBOSSMENT_RECIPE_SERIALIZER = null;
     public static RegistryObject<RecipeSerializer<ValidatableIncrementalModifierRecipe>> VALIDATABLE_INCREMENTAL_RECIPE_SERIALIZER = null;
+
+
+    public static RegistryObject<MenuType<FluidTransmuterContainerMenu>> FLUID_TRANSMUTER_MENU_TYPE;
 
 
 
@@ -217,9 +223,11 @@ public class TicEXRegistry {
     public static RegistryObject<Block> CREATIVE_SEARED_RF_FURNACE = null;
     public static RegistryObject<Block> SCORCHED_RF_FURNACE = null;
     public static RegistryObject<Block> CREATIVE_SCORCHED_RF_FURNACE = null;
+    public static RegistryObject<Block> FLUID_TRANSMUTER = null;
 
     public static RegistryObject<BlockEntityType<RFFurnaceBlockEntity>> RF_FURNACE_ENTITY = null;
     public static RegistryObject<BlockEntityType<RFFurnaceBlockEntity>> CREATIVE_RF_FURNACE_ENTITY = null;
+    public static RegistryObject<BlockEntityType<FluidTransmuterBlockEntity>> FLUID_TRANSMUTER_ENTITY = null;
 
     public static FluidObject<UnplaceableFluid> MOLTEN_RECONSTRUCTION_CORE = null;
     public static List<FluidObject<UnplaceableFluid>> RF_FURNACE_FUELS = new ArrayList<>();
