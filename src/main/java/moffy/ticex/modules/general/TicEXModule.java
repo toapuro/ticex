@@ -9,6 +9,7 @@ import moffy.ticex.block.transmuter.container.FluidTransmuterContainerMenu;
 import moffy.ticex.block.transmuter.entity.FluidTransmuterBlockEntity;
 import moffy.ticex.caps.TiCEXToolCapabilityProvider;
 import moffy.ticex.client.modules.ticex.UnsyncedToolContainerMenu;
+import moffy.ticex.client.modules.ticex.screen.FluidTransmuterScreen;
 import moffy.ticex.event.TicEXEvent;
 import moffy.ticex.item.cores.ItemFlickeringCore;
 import moffy.ticex.item.cores.ItemReconstCore;
@@ -24,7 +25,6 @@ import moffy.ticex.modifier.ModifierSassy;
 import moffy.ticex.network.TicEXPacketID;
 import moffy.ticex.network.curios.TicEXSyncEntityMovements;
 import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -35,14 +35,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.MapColor;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.TierSortingRegistry;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -247,10 +243,6 @@ public class TicEXModule extends AddonModule {
                 List.of()
             );
         }
-        DistExecutor.unsafeRunWhenOn(
-            Dist.CLIENT,
-                () -> this::initClient
-        );
     }
 
     @Override
@@ -264,11 +256,5 @@ public class TicEXModule extends AddonModule {
     @Override
     public void setup(FMLCommonSetupEvent event) {
         event.enqueueWork(CatalystMaterialStatsType::RegisterStats);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    public void initClient(){
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        bus.addListener(TicEXEvent::addLayers);
     }
 }

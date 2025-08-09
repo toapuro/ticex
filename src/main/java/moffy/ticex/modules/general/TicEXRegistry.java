@@ -150,9 +150,6 @@ public class TicEXRegistry {
     public static final MenuTypeDeferredRegister MENUS = new MenuTypeDeferredRegister(
         TicEX.MODID
     );
-    public static final MenuTypeDeferredRegister MENUS = new MenuTypeDeferredRegister(
-            TicEX.MODID
-    );
 
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_ITEMS = null;
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_TOOLS = null;
