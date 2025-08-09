@@ -50,6 +50,7 @@ import slimeknights.tconstruct.library.tools.item.IModifiable;
 import slimeknights.tconstruct.library.tools.item.ModifiableItem;
 import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 import slimeknights.tconstruct.smeltery.block.component.SearedBlock;
+import slimeknights.tconstruct.tools.menu.ToolContainerMenu;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -149,7 +150,9 @@ public class TicEXRegistry {
     public static final MenuTypeDeferredRegister MENUS = new MenuTypeDeferredRegister(
         TicEX.MODID
     );
-
+    public static final MenuTypeDeferredRegister MENUS = new MenuTypeDeferredRegister(
+            TicEX.MODID
+    );
 
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_ITEMS = null;
     public static RegistryObject<CreativeModeTab> CREATIVE_TAB_TOOLS = null;
@@ -160,6 +163,8 @@ public class TicEXRegistry {
     public static RegistryObject<RecipeSerializer<SingleEmbossmentModifierRecipe>> SINGLE_MODIFIER_EMBOSSMENT_RECIPE_SERIALIZER = null;
     public static RegistryObject<RecipeSerializer<ValidatableIncrementalModifierRecipe>> VALIDATABLE_INCREMENTAL_RECIPE_SERIALIZER = null;
 
+
+    public static RegistryObject<MenuType<ToolContainerMenu>> UNSYNCED_TOOL_CONTAINER = null;
 
     public static RegistryObject<MenuType<FluidTransmuterContainerMenu>> FLUID_TRANSMUTER_MENU_TYPE;
 
@@ -238,6 +243,7 @@ public class TicEXRegistry {
 
     public static RegistryObject<EntityType<?>> SLASHBLADE_TOOL_ITEM_ENTITY = null;
     public static RegistryObject<EntityType<?>> ENDESTSHOT_PROJECTILE = null;
+    public static RegistryObject<EntityType<?>> RESONANCE_TOOL_PROJECTILE = null;
 
     public static RegistryObject<Attribute> HEALING_RECEIVED = null;
     public static RegistryObject<Attribute> DAMAGE_TAKEN = null;
