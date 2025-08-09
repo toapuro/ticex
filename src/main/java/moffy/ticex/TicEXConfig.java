@@ -12,6 +12,7 @@ public class TicEXConfig {
 
     public static ForgeConfigSpec.ConfigValue<Integer> RF_FURNACE_RATE_CAPACITY;
     public static ForgeConfigSpec.ConfigValue<List<String>> FLUID_TRANSMUTER_PATTERNS;
+    public static ForgeConfigSpec.ConfigValue<List<String>> FLUID_TRANSMUTER_EXCLUDE_PATTERNS;
     public static ForgeConfigSpec.ConfigValue<Boolean> USE_SHADER;
     public static ForgeConfigSpec.ConfigValue<Float> CONDENSING_DROP_PROBABILITY;
     public static ForgeConfigSpec.ConfigValue<Boolean> MEKAPLATE_USE_POWER_SHIELD;
@@ -26,10 +27,14 @@ public class TicEXConfig {
         RF_FURNACE_RATE_CAPACITY = COMMON.comment("MAX Rate Capacity(RF/t)").define("rateCapacity", 100000);
         COMMON.pop();
 
-        COMMON.comment("Fluid Transmuter Settings").push("fluid_Transmuter");
+        COMMON.comment("Fluid Transmuter Settings").push("fluid_transmuter");
         FLUID_TRANSMUTER_PATTERNS = COMMON.comment("The list of valid tag prefixes for the Fluid Transmuter").define(
                 "fluid_transmuter_patterns",
                 List.of("forge:", "forge:storage_blocks/"));
+
+        FLUID_TRANSMUTER_EXCLUDE_PATTERNS = COMMON.comment("A list of tag prefixes to exclude in the Fluid Transmuter").define(
+                "fluid_transmuter_exclude_patterns",
+                List.of("minecraft:water", "minecraft:lava"));
         COMMON.pop();
 
         COMMON.push("avaritia");

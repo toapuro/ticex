@@ -1,8 +1,10 @@
 package moffy.ticex.block.transmuter.module;
 
+import moffy.ticex.block.transmuter.pattern.FluidTransmuterExcludePattern;
 import moffy.ticex.block.transmuter.pattern.FluidTransmuterPair;
 import moffy.ticex.block.transmuter.pattern.FluidTransmuterPattern;
 import moffy.ticex.block.transmuter.tank.ITransmuterTank;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,14 +22,21 @@ public class TransmuterModule {
     private final Map<Fluid, FluidTransmuterPair> pairCache;
     private final ITransmuterTank transmuterTank;
     private final List<FluidTransmuterPattern> patterns;
+    private final List<FluidTransmuterExcludePattern> excludePatterns;
     private final int maxRate;
 
-    public TransmuterModule(MantleBlockEntity parent, ITransmuterTank transmuterTank, List<FluidTransmuterPattern> patterns, int maxRate) {
+    public TransmuterModule(MantleBlockEntity parent, ITransmuterTank transmuterTank, int maxRate, List<FluidTransmuterPattern> patterns, List<FluidTransmuterExcludePattern> excludePatterns) {
+        this.pairCache = new HashMap<>();
+
         this.parent = parent;
         this.transmuterTank = transmuterTank;
-        this.patterns = patterns;
         this.maxRate = maxRate;
-        this.pairCache = new HashMap<>();
+        this.patterns = patterns;
+        this.excludePatterns = excludePatterns;
+    }
+
+    private boolean validateTag(TagKey<Fluid> tagKey) {
+        return this.excludePatterns.stream().noneMatch(pattern -> pattern.isInvalidTag(tagKey));
     }
 
     @Nullable
@@ -48,7 +57,7 @@ public class TransmuterModule {
                 }
 
                 Optional<Fluid> matchPattern = patterns.stream()
-                        .map(pattern -> pattern.resolveOutput(inputFluid))
+                        .map(pattern -> pattern.resolveOutput(inputFluid, this::validateTag))
                         .filter(output -> output != Fluids.EMPTY)
                         .findAny();
 

@@ -77,7 +77,20 @@ public class FluidTransmuterContainerMenu extends TriggeringBaseContainerMenu<Fl
                 } else if (index == 1) {
                     handler = this.tile.getFuelModule().getTank();
                 } else {
-                    handler = this.tile.getTransmuterTank().getFluidHandler(index - 2);
+                    TransmuterFluidTank transmuterTank = tile.getTransmuterTank();
+                    handler = null;
+
+                    int tankIndex = 0;
+                    for (int i = 0; i < transmuterTank.getInputTanks(); i++) {
+                        IFluidHandler fluidHandler = transmuterTank.getFluidHandler(i);
+                        if (fluidHandler == null) continue;
+
+                        if (tankIndex == index - 2) {
+                            handler = transmuterTank.getFluidHandler(i);
+                            break;
+                        }
+                        tankIndex++;
+                    }
                 }
 
                 if (handler != EmptyFluidHandler.INSTANCE && handler != null) {

@@ -32,7 +32,11 @@ public class FluidTransmuterPattern {
         return manager;
     }
 
-    public boolean isValidTag(TagKey<Fluid> tag) {
+    public boolean isValidTag(TagKey<Fluid> tag, Predicate<TagKey<Fluid>> tagValidator) {
+        if (!tagValidator.test(tag)) {
+            return false;
+        }
+
         if (tag != null && getTagManager().isKnownTagName(tag)) {
             ResourceLocation location = tag.location();
             return location.toString().startsWith(tagPrefix);
@@ -41,7 +45,7 @@ public class FluidTransmuterPattern {
         return false;
     }
 
-    public Fluid resolveOutput(Fluid input) {
+    public Fluid resolveOutput(Fluid input, Predicate<TagKey<Fluid>> tagValidator) {
         if (pairCache.containsKey(input)) {
             return pairCache.get(input);
         }
@@ -53,15 +57,15 @@ public class FluidTransmuterPattern {
 
         Holder<Fluid> fluidHolder = holder.get();
         fluidHolder.tags().forEach(fluidTagKey -> {
-            if (!isValidTag(fluidTagKey)) {
+            if (!isValidTag(fluidTagKey, tagValidator)) {
                 return;
             }
 
-            ITag<Fluid> tag = getTagManager().getTag(fluidTagKey);
+            ITag<Fluid> tagContents = getTagManager().getTag(fluidTagKey);
 
-            Optional<Fluid> matchFluid = tag.stream()
+            Optional<Fluid> matchFluid = tagContents.stream()
                     .filter(fluid -> !fluid.isSame(input))
-                    .filter(Predicate.not(pairCache::containsValue))
+                    .filter(Predicate.not(pairCache::containsValue)) // no duplicate
                     .findFirst();
 
             matchFluid.ifPresent(fluid -> {
@@ -73,13 +77,6 @@ public class FluidTransmuterPattern {
             return Fluids.EMPTY;
         }
         return pairCache.get(input);
-    }
-
-    public boolean canResolve(Fluid input) {
-        if (pairCache.containsKey(input)) {
-            return true;
-        }
-        return !resolveOutput(input).isSame(Fluids.EMPTY);
     }
 
     public String getTagPrefix() {

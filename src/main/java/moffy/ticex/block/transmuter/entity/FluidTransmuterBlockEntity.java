@@ -3,6 +3,7 @@ package moffy.ticex.block.transmuter.entity;
 import moffy.ticex.TicEXConfig;
 import moffy.ticex.block.transmuter.container.FluidTransmuterContainerMenu;
 import moffy.ticex.block.transmuter.module.TransmuterModule;
+import moffy.ticex.block.transmuter.pattern.FluidTransmuterExcludePattern;
 import moffy.ticex.block.transmuter.pattern.FluidTransmuterPattern;
 import moffy.ticex.block.transmuter.tank.TransmuterFluidTank;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ import slimeknights.mantle.block.entity.NameableBlockEntity;
 import slimeknights.tconstruct.TConstruct;
 import slimeknights.tconstruct.common.TinkerTags;
 import slimeknights.tconstruct.library.fluid.FluidTankAnimated;
+import slimeknights.tconstruct.library.utils.NBTTags;
 import slimeknights.tconstruct.smeltery.block.component.SearedTankBlock;
 import slimeknights.tconstruct.smeltery.block.controller.ControllerBlock;
 import slimeknights.tconstruct.smeltery.block.controller.MelterBlock;
@@ -60,8 +62,13 @@ public class FluidTransmuterBlockEntity extends NameableBlockEntity implements I
             patterns.add(new FluidTransmuterPattern(prefix));
         }
 
+        List<FluidTransmuterExcludePattern> excludePatterns = new ArrayList<>();
+        for (String prefix : TicEXConfig.FLUID_TRANSMUTER_EXCLUDE_PATTERNS.get()) {
+            excludePatterns.add(new FluidTransmuterExcludePattern(prefix));
+        }
+
         this.transmuterTank = new TransmuterFluidTank(this, this.tank);
-        this.transmuterModule = new TransmuterModule(this, this.transmuterTank, patterns, 20);
+        this.transmuterModule = new TransmuterModule(this, this.transmuterTank, 20, patterns, excludePatterns);
         this.fuelModule = new SolidFuelModule(this, pos.below());
     }
 
@@ -117,7 +124,7 @@ public class FluidTransmuterBlockEntity extends NameableBlockEntity implements I
 
     public void saveSynced(@NotNull CompoundTag tag) {
         super.saveSynced(tag);
-        tag.put("tank", this.tank.writeToNBT(new CompoundTag()));
+        tag.put(NBTTags.TANK, this.tank.writeToNBT(new CompoundTag()));
     }
 
     public void saveAdditional(@NotNull CompoundTag tag) {
@@ -127,8 +134,13 @@ public class FluidTransmuterBlockEntity extends NameableBlockEntity implements I
 
     public void load(@NotNull CompoundTag nbt) {
         super.load(nbt);
-        this.tank.readFromNBT(nbt.getCompound("tank"));
+        this.tank.readFromNBT(nbt.getCompound(NBTTags.TANK));
         this.fuelModule.readFromTag(nbt);
+    }
+
+    @Override
+    protected boolean shouldSyncOnUpdate() {
+        return true;
     }
 
     @Override
