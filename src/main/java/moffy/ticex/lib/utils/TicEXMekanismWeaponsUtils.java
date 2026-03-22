@@ -9,6 +9,7 @@ import mekanism.api.providers.IModuleDataProvider;
 import mekanism.common.registries.MekanismItems;
 import mekanism.common.util.StorageUtils;
 import meranha.mekaweapons.MekaWeapons;
+import meranha.mekaweapons.items.modules.DrawSpeedUnit;
 import meranha.mekaweapons.items.modules.WeaponAttackAmplificationUnit;
 import meranha.mekaweapons.items.modules.WeaponsModules;
 import moffy.ticex.TicEX;
@@ -19,19 +20,22 @@ import moffy.ticex.lib.modules.mekanism.MekaGearCapability;
 import moffy.ticex.lib.modules.mekanism.interfaces.IMekaGear;
 import moffy.ticex.modules.general.TicEXRegistry;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import slimeknights.tconstruct.common.TinkerTags;
+import slimeknights.tconstruct.library.tools.nbt.IToolStackView;
 import slimeknights.tconstruct.library.tools.part.ToolPartItem;
 
 public class TicEXMekanismWeaponsUtils {
     public static Item getAlternativeWeapon(ItemStack stack){
-        if(stack.is(TinkerTags.Items.MELEE_WEAPON)){
-            return MekaWeapons.MEKA_TANA.get();
-        } else if(stack.is(TinkerTags.Items.RANGED)){
+        if(stack.is(TinkerTags.Items.RANGED)){
             return MekaWeapons.MEKA_BOW.get();
+        } else if(stack.is(TinkerTags.Items.MELEE_WEAPON)){
+            return MekaWeapons.MEKA_TANA.get();
         }
         return MekanismItems.MEKA_TOOL.get();
     }
@@ -62,7 +66,8 @@ public class TicEXMekanismWeaponsUtils {
             if(unit != null){
                 IEnergyContainer energyContainer = StorageUtils.getEnergyContainer(stack, 0);
                 FloatingLong energy = energyContainer != null ? energyContainer.getEnergy() : FloatingLong.ZERO;
-                int unitDamage = energy.greaterOrEqual(MekaWeapons.general.mekaTanaEnergyUsage.get()) ? unit.getCustomInstance().getCurrentUnit() : 0;
+                FloatingLong usage = stack.is(TinkerTags.Items.RANGED) ? MekaWeapons.general.mekaBowEnergyUsage.get() : MekaWeapons.general.mekaTanaEnergyUsage.get();
+                int unitDamage = energy.greaterOrEqual(usage) ? unit.getCustomInstance().getCurrentUnit() : 0;
                 if(unit.getInstalledCount() > 4){
                     return (unitDamage - 1) / 5f * (unit.getInstalledCount() + 1);
                 }
@@ -70,5 +75,27 @@ public class TicEXMekanismWeaponsUtils {
             }
         }
         return 0;
+    }
+
+    public static void handleAutoFire(LivingEntity entity, IToolStackView tool, int useDuration, int timeLeft){
+        if(tool.hasTag(TinkerTags.Items.RANGED)){
+            ItemStack toolStack = TicEXUtils.getToolStack(tool, entity, TicEXRegistry.MEKANIC_MODIFIER.get());
+            toolStack.getCapability(MekaGearCapability.MEKA_GEAR_CAPABILITY).ifPresent(mekaGear -> {
+                if (entity.isAlive() && mekaGear.isModuleEnabled(toolStack, WeaponsModules.AUTOFIRE_UNIT) && useDuration - timeLeft == getUseTick(toolStack, mekaGear)) {
+                    entity.stopUsingItem();
+                    toolStack.releaseUsing(entity.level(), entity, 0);
+                    entity.startUsingItem(entity.getUsedItemHand());
+                }
+            });
+        }
+    }
+
+    private static float getUseTick(@NotNull ItemStack stack, IMekaGear mekaGear) {
+        float useTick = 20.0F;
+        IModule<DrawSpeedUnit> drawSpeedUnit = mekaGear.getModule(stack, WeaponsModules.DRAWSPEED_UNIT);
+        if (drawSpeedUnit != null && drawSpeedUnit.isEnabled()) {
+            useTick -= 5.0f * drawSpeedUnit.getCustomInstance().getDrawSpeed();
+        }
+        return useTick;
     }
 }

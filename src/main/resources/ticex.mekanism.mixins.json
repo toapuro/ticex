@@ -8,12 +8,14 @@
     "IModifiableMixin",
     "MekanismHUDMixin",
     "MekaSuitEnergyLevelMixin",
+    "ModifiableArmorItemMixin",
     "ModuleHelperMixin",
     "ModuleJetpackUnitMixin",
     "ModuleNutritionalInjectionUnitMixin",
     "ModuleTweakerContainerMixin"
   ],
   "client": [
+    "GuiModuleTweakerMixin",
     "HUDHandlerMixin"
   ],
   "server": [],
